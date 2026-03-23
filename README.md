@@ -34,7 +34,10 @@ Copia los valores de [.env.example](.env.example) hacia tu configuracion real. N
 
 - DATABASE_URL
 - AUTH_SECRET
+- AUTH_URL (opcional, recomendado en despliegue)
 - AUTH_TRUST_HOST
+- NEXT_SERVER_ACTIONS_ALLOWED_ORIGINS (opcional)
+- NEXT_ALLOWED_DEV_ORIGINS (opcional, solo desarrollo)
 - SEED_USER_1_NAME, SEED_USER_1_EMAIL, SEED_USER_1_PASSWORD
 - SEED_USER_2_NAME, SEED_USER_2_EMAIL, SEED_USER_2_PASSWORD
 - SEED_USER_3_NAME, SEED_USER_3_EMAIL, SEED_USER_3_PASSWORD
@@ -103,3 +106,4 @@ npm run prisma:seed
 - Si quieres cambiar las tres credenciales permitidas, modifica el seed o administra esos usuarios en PostgreSQL.
 - El soft delete no borra datos, solo completa deletedAt.
 - El historial se guarda en AuditLog.
+- Si aparece el error "Invalid Server Actions request", define AUTH_URL con tu dominio publico o agrega el host de acceso en NEXT_SERVER_ACTIONS_ALLOWED_ORIGINS y NEXT_ALLOWED_DEV_ORIGINS.

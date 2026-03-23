@@ -1,16 +1,52 @@
 "use client";
 
-import { useActionState } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
-import { authenticate, type LoginFormState } from "@/app/login/actions";
-
-const initialState: LoginFormState = {};
+import { loginSchema } from "@/lib/validators";
 
 export function LoginForm() {
-  const [state, formAction, isPending] = useActionState(authenticate, initialState);
+  const router = useRouter();
+  const [error, setError] = useState<string>();
+  const [isPending, setIsPending] = useState(false);
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError(undefined);
+    setIsPending(true);
+
+    const formData = new FormData(event.currentTarget);
+    const parsedCredentials = loginSchema.safeParse({
+      email: formData.get("email"),
+      password: formData.get("password"),
+    });
+
+    if (!parsedCredentials.success) {
+      setError(parsedCredentials.error.issues[0]?.message ?? "Credenciales invalidas");
+      setIsPending(false);
+      return;
+    }
+
+    const result = await signIn("credentials", {
+      email: parsedCredentials.data.email,
+      password: parsedCredentials.data.password,
+      redirect: false,
+      redirectTo: "/dashboard",
+    });
+
+    if (result?.error) {
+      setError("Correo o contraseña incorrectos");
+      setIsPending(false);
+      return;
+    }
+
+    router.replace(result?.url ?? "/dashboard");
+    router.refresh();
+  }
 
   return (
-    <form action={formAction} className="glass grid gap-4 rounded-[2rem] p-6 text-sm text-slate-700">
+    <form onSubmit={handleSubmit} className="glass grid gap-4 rounded-[2rem] p-6 text-sm text-slate-700">
       <div className="grid gap-1">
         <label htmlFor="email" className="font-medium text-slate-900">
           Correo
@@ -42,8 +78,8 @@ export function LoginForm() {
         />
       </div>
 
-      {state.error ? (
-        <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">{state.error}</p>
+      {error ? (
+        <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">{error}</p>
       ) : null}
 
       <button
