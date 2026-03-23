@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Miso Phone DB
 
-## Getting Started
+Aplicacion web PWA instalable para gestionar contactos telefonicos y de WhatsApp con acceso restringido a tres usuarios, auditoria completa y soporte para soft delete.
 
-First, run the development server:
+## Stack recomendado
+
+- Next.js 16 + App Router + TypeScript
+- Auth.js con login por credenciales
+- Prisma ORM
+- PostgreSQL en Railway
+- Tailwind CSS 4
+
+## Por que esta combinacion
+
+- PostgreSQL en Railway evita operar infraestructura extra y encaja mejor que MySQL para este caso.
+- Prisma simplifica el modelo de datos, migraciones y consultas de busqueda.
+- Auth.js con provider de credenciales permite limitar el acceso solo a usuarios existentes en la base de datos.
+- Next.js permite tener frontend, backend y PWA en un solo proyecto Node.js.
+
+## Funcionalidades incluidas
+
+- Login restringido a tres usuarios sembrados en la base de datos
+- Dashboard con CRUD de contactos
+- Campos: nombre completo, nick, telefono, WhatsApp, categoria, nacionalidad, localidad, fecha de contacto, fecha de creacion, fecha de edicion, fecha de eliminacion y observacion
+- Campo quien informa enlazado a usuario de la base de datos
+- Soft delete con restauracion
+- Busqueda general y filtro por categoria/estado
+- Historial de altas, ediciones, eliminaciones, restauraciones e intentos de login
+- Manifest PWA e iconos para instalacion en movil
+
+## Variables de entorno
+
+Copia los valores de [.env.example](.env.example) hacia tu configuracion real. Necesitas definir:
+
+- DATABASE_URL
+- AUTH_SECRET
+- AUTH_TRUST_HOST
+- SEED_USER_1_NAME, SEED_USER_1_EMAIL, SEED_USER_1_PASSWORD
+- SEED_USER_2_NAME, SEED_USER_2_EMAIL, SEED_USER_2_PASSWORD
+- SEED_USER_3_NAME, SEED_USER_3_EMAIL, SEED_USER_3_PASSWORD
+
+## Inicio local
+
+1. Instala dependencias:
+
+```bash
+npm install
+```
+
+2. Configura PostgreSQL local o usa una base de Railway.
+
+3. Ejecuta migraciones:
+
+```bash
+npm run prisma:migrate -- --name init
+```
+
+4. Inserta los tres usuarios permitidos:
+
+```bash
+npm run prisma:seed
+```
+
+5. Inicia el entorno de desarrollo:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Despliegue sugerido en Railway
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Crea un proyecto en Railway.
+2. Agrega un servicio PostgreSQL.
+3. Agrega un servicio Node.js conectado a este repositorio.
+4. Configura las variables de entorno del servicio web con los valores del bloque anterior.
+5. Usa estos comandos:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run prisma:generate
+npm run build
+```
 
-## Learn More
+6. Antes del primer arranque, ejecuta migraciones y seed:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npx prisma migrate deploy
+npm run prisma:seed
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Estructura principal
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [src/app/login/page.tsx](src/app/login/page.tsx): pantalla de acceso
+- [src/app/dashboard/page.tsx](src/app/dashboard/page.tsx): dashboard principal y mantenedor
+- [src/app/dashboard/history/page.tsx](src/app/dashboard/history/page.tsx): modulo de historial
+- [src/app/dashboard/actions.ts](src/app/dashboard/actions.ts): acciones del servidor para CRUD y logout
+- [src/auth.ts](src/auth.ts): configuracion de autenticacion
+- [prisma/schema.prisma](prisma/schema.prisma): modelo de datos
 
-## Deploy on Vercel
+## Notas operativas
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- El acceso queda limitado a los usuarios existentes en la tabla User.
+- Si quieres cambiar las tres credenciales permitidas, modifica el seed o administra esos usuarios en PostgreSQL.
+- El soft delete no borra datos, solo completa deletedAt.
+- El historial se guarda en AuditLog.

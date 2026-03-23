@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ContactCategory {
+  SELLER
+  HARASSER
+  ANNOYING
+  PERVERT
+  UNCERTAIN
+}
+
+enum AuditAction {
+  CREATED
+  UPDATED
+  DELETED
+  RESTORED
+  LOGIN_SUCCESS
+  LOGIN_FAILURE
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  fullName     String
+  passwordHash String
+  isActive     Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  contacts     Contact[]
+  auditLogs    AuditLog[]
+
+  @@index([isActive])
+}
+
+model Contact {
+  id          String          @id @default(cuid())
+  fullName    String
+  nick        String?
+  phone       String?
+  whatsapp    String?
+  category    ContactCategory
+  nationality String?
+  locality    String?
+  contactDate DateTime?
+  notes       String?
+  reporterId  String
+  reporter    User            @relation(fields: [reporterId], references: [id], onDelete: Restrict)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  deletedAt   DateTime?
+
+  @@index([category])
+  @@index([deletedAt])
+  @@index([fullName])
+  @@index([phone])
+  @@index([whatsapp])
+  @@index([reporterId])
+}
+
+model AuditLog {
+  id         String      @id @default(cuid())
+  action     AuditAction
+  entityType String
+  entityId   String?
+  summary    String
+  changes    Json?
+  actorId    String?
+  actor      User?       @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  createdAt  DateTime    @default(now())
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@index([action])
+}
