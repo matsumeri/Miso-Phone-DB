@@ -76,20 +76,40 @@ npm run dev
 2. Agrega un servicio PostgreSQL.
 3. Agrega un servicio Node.js conectado a este repositorio.
 4. Configura las variables de entorno del servicio web con los valores del bloque anterior.
-5. Usa estos comandos:
+5. Define tambien estas variables con los valores de tu dominio publico de Railway:
 
 ```bash
-npm install
-npm run prisma:generate
-npm run build
+AUTH_URL="https://tu-app.up.railway.app"
+NEXT_SERVER_ACTIONS_ALLOWED_ORIGINS="tu-app.up.railway.app"
 ```
 
-6. Antes del primer arranque, ejecuta migraciones y seed:
+6. El repositorio ya incluye [railway.json](railway.json), asi que Railway usara estos comandos automaticamente:
 
 ```bash
-npx prisma migrate deploy
+npm run build
+npm run start:railway
+```
+
+7. En el arranque, la app ejecuta las migraciones pendientes con `prisma migrate deploy` antes de levantar Next.js.
+
+8. Ejecuta el seed una sola vez tras el primer despliegue correcto desde la consola del servicio:
+
+```bash
 npm run prisma:seed
 ```
+
+9. Verifica el healthcheck publico en esta ruta:
+
+```bash
+https://tu-app.up.railway.app/api/health
+```
+
+## Estado actual para produccion
+
+- GitHub Pages solo publica una portada estatica informativa.
+- La aplicacion funcional debe correr en Railway u otro hosting con Node.js.
+- El endpoint [src/app/api/health/route.ts](src/app/api/health/route.ts) queda disponible para healthchecks.
+- La configuracion de Railway queda declarada en [railway.json](railway.json).
 
 ## Estructura principal
 
@@ -107,3 +127,4 @@ npm run prisma:seed
 - El soft delete no borra datos, solo completa deletedAt.
 - El historial se guarda en AuditLog.
 - Si aparece el error "Invalid Server Actions request", define AUTH_URL con tu dominio publico o agrega el host de acceso en NEXT_SERVER_ACTIONS_ALLOWED_ORIGINS y NEXT_ALLOWED_DEV_ORIGINS.
+- En Railway, no dejes `AUTH_URL` vacio: debe coincidir con el dominio publico real del servicio.

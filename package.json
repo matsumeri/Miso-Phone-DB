@@ -6,8 +6,10 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
+    "start:railway": "npm run db:deploy && npm run start",
     "lint": "eslint",
     "prisma:generate": "prisma generate",
+    "db:deploy": "prisma migrate deploy",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "node prisma/seed.mjs",
     "postinstall": "prisma generate"

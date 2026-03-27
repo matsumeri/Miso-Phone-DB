@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Miso Phone DB</title>
+    <meta
+      name="description"
+      content="Miso Phone DB necesita un entorno con servidor y base de datos. GitHub Pages solo publica esta portada informativa."
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f4efe6;
+        --panel: rgba(255, 252, 246, 0.9);
+        --text: #1d1a16;
+        --muted: #5c5246;
+        --accent: #a84d1b;
+        --accent-dark: #7d3711;
+        --border: rgba(29, 26, 22, 0.12);
+        --shadow: 0 24px 60px rgba(65, 37, 15, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Georgia, "Times New Roman", serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(168, 77, 27, 0.18), transparent 30%),
+          radial-gradient(circle at bottom right, rgba(82, 125, 91, 0.16), transparent 28%),
+          linear-gradient(180deg, #f8f3ea 0%, var(--bg) 100%);
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      main {
+        width: min(760px, 100%);
+        background: var(--panel);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        padding: 40px;
+        box-shadow: var(--shadow);
+      }
+
+      .eyebrow {
+        margin: 0 0 14px;
+        color: var(--accent);
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2.4rem, 5vw, 4.5rem);
+        line-height: 0.95;
+      }
+
+      p {
+        margin: 0;
+        font-size: 1.08rem;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+
+      .lead {
+        margin-top: 20px;
+        font-size: 1.18rem;
+        color: var(--text);
+      }
+
+      .panel {
+        margin-top: 28px;
+        padding: 22px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.62);
+        border: 1px solid rgba(29, 26, 22, 0.08);
+      }
+
+      ul {
+        margin: 14px 0 0;
+        padding-left: 20px;
+        color: var(--muted);
+      }
+
+      li + li {
+        margin-top: 10px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 30px;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        padding: 0 18px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+      }
+
+      .button-primary {
+        background: var(--accent);
+        color: #fff9f2;
+        box-shadow: 0 14px 30px rgba(168, 77, 27, 0.22);
+      }
+
+      .button-secondary {
+        background: transparent;
+        border: 1px solid var(--border);
+      }
+
+      .button:hover,
+      .button:focus-visible {
+        transform: translateY(-1px);
+      }
+
+      .footer {
+        margin-top: 24px;
+        font-size: 0.95rem;
+      }
+
+      code {
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 0.95em;
+        color: var(--text);
+      }
+
+      @media (max-width: 640px) {
+        main {
+          padding: 28px;
+          border-radius: 22px;
+        }
+
+        .actions {
+          flex-direction: column;
+        }
+
+        .button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">GitHub Pages</p>
+      <h1>Miso Phone DB</h1>
+      <p class="lead">
+        Esta URL publica una portada informativa. La aplicacion completa no puede ejecutarse en GitHub Pages.
+      </p>
+
+      <div class="panel">
+        <p>
+          El proyecto usa Next.js con autenticacion, acciones de servidor, Prisma y PostgreSQL. GitHub Pages solo sirve
+          archivos estaticos, asi que no puede levantar el login, la base de datos ni el backend de la app.
+        </p>
+        <ul>
+          <li>Frontend y backend: Next.js 16</li>
+          <li>Autenticacion: Auth.js con credenciales</li>
+          <li>Persistencia: Prisma + PostgreSQL</li>
+          <li>Despliegue recomendado: Railway para app y base de datos</li>
+        </ul>
+      </div>
+
+      <div class="actions">
+        <a class="button button-primary" href="https://github.com/matsumeri/Miso-Phone-DB">Ver repositorio</a>
+        <a class="button button-secondary" href="https://github.com/matsumeri/Miso-Phone-DB#despliegue-sugerido-en-railway">
+          Ver instrucciones de despliegue
+        </a>
+      </div>
+
+      <p class="footer">
+        Si quieres una version publica funcional, despliegala en un servicio con runtime de Node.js y configura las
+        variables de entorno como <code>DATABASE_URL</code> y <code>AUTH_SECRET</code>.
+      </p>
+    </main>
+  </body>
+  </html>
